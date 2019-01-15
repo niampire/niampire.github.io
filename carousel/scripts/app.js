@@ -30,8 +30,6 @@ class Carousel {
                 this.currentIndex = this.slides.length - 1;
             }
             this.elements.slides.prepend(this.slides[this.currentIndex]);
-            this.slidesMargin += this.getSlideWidth(this.currentIndex - 1);
-            this.elements.slides.style.marginLeft = `${this.slidesMargin}px`;
             this.currentIndex--;
         });
         this.elements.next.addEventListener('click', () => {
@@ -39,19 +37,8 @@ class Carousel {
                 this.currentIndex = 0;
             }
             this.elements.slides.append(this.slides[this.currentIndex]);
-            this.slidesMargin -= this.getSlideWidth(this.currentIndex);
-            this.elements.slides.style.marginLeft = `${this.slidesMargin}px`;
             this.currentIndex++;
         });
-    }
-
-    getSlideWidth(index) {
-        const slide = this.slides[index];
-        const style = window.getComputedStyle(slide);
-        const slideInnerSize = slide.getBoundingClientRect();
-        return slideInnerSize.width
-            + parseInt(style.marginLeft, 5)
-            + parseInt(style.marginRight, 5);
     }
 }
 
