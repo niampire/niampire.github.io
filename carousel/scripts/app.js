@@ -26,8 +26,8 @@ class Carousel {
 
     listenEvents() {
         this.elements.prev.addEventListener('click', () => {
-            if (this.currentIndex <= 0) {
-                this.currentIndex = this.slides.length;
+            if (this.currentIndex < 0) {
+                this.currentIndex = this.slides.length - 1;
             }
             this.elements.slides.prepend(this.slides[this.currentIndex]);
             this.slidesMargin += this.getSlideWidth(this.currentIndex - 1);
