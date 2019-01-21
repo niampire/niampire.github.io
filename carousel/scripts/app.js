@@ -26,19 +26,49 @@ class Carousel {
 
     listenEvents() {
         this.elements.prev.addEventListener('click', () => {
-            if (this.currentIndex < 0) {
-                this.currentIndex = this.slides.length - 1;
+            if (this.currentIndex <= 0) {
+                for (let i = 0; i < 3; i += 1 ) {
+                    this.elements.slides.append(this.slides[i].cloneNode(true));
+                }
+                this.elements.slides.style.transition = 'none';
+                this.slidesMargin += -(this.getSlideWidth(this.currentIndex)*(this.slides.length));
+                this.elements.slides.style.marginLeft = `${this.slidesMargin}px`;
+                this.currentIndex = this.slides.length;
             }
-            this.elements.slides.prepend(this.slides[this.currentIndex]);
+
+            this.slidesMargin += this.getSlideWidth(this.currentIndex - 1);
+            this.elements.slides.style.marginLeft = `${this.slidesMargin}px`;
             this.currentIndex--;
+            this.elements.slides.style.transition = 'all 600ms linear 0s';
         });
         this.elements.next.addEventListener('click', () => {
-            if (this.currentIndex > this.slides.length - 1) {
-                this.currentIndex = 0;
-            }
-            this.elements.slides.append(this.slides[this.currentIndex]);
+            if (this.currentIndex >= this.slides.length - 3) {
+                for (let i = 0; i < 3; i += 1 ) {
+                    this.elements.slides.append(this.slides[i].cloneNode(true));
+                }
+                this.elements.slides.addEventListener("transitionend", () => {
+                    if (this.currentIndex >= this.slides.length) {
+                        this.currentIndex = 0;
+                        this.slidesMargin = 0;
+                        this.elements.slides.style.transition = 'none';
+                        this.elements.slides.style.marginLeft = `${this.slidesMargin}px`;
+                    }
+                });
+            } 
+            this.slidesMargin -= this.getSlideWidth(this.currentIndex);
+            this.elements.slides.style.marginLeft = `${this.slidesMargin}px`;
             this.currentIndex++;
+            this.elements.slides.style.transition = 'all 600ms linear 0s';
         });
+    }
+
+    getSlideWidth(index) {
+        const slide = this.slides[index];
+        const style = window.getComputedStyle(slide);
+        const slideInnerSize = slide.getBoundingClientRect();
+        return slideInnerSize.width
+            + parseInt(style.marginLeft, 10)
+            + parseInt(style.marginRight, 10);
     }
 }
 
